@@ -306,24 +306,27 @@ async function callGemini(params, isFindingMore, searchKey) {
     }
 
     let systemInstruction;
-    let prompt;
+    let contents;
 
     if (isFindingMore) {
         const existingNames = currentGuideData.map(r => r.name).join(', ');
         systemInstruction = findMoreSystemInstruction;
-        prompt = `Find 5 more restaurants in ${params.city}, excluding these: ${existingNames}.`;
+        contents = `Find 5 more restaurants in ${params.city}, excluding these: ${existingNames}.`;
     } else {
-        prompt = buildUserPrompt(params);
+        contents = buildUserPrompt(params);
         systemInstruction = params.dish ? topTenSystemInstruction : baseSystemInstruction;
     }
 
-    const combinedPrompt = `${systemInstruction}\n\n---\n\n# USER REQUEST:\n\n${prompt}`;
-
     try {
+        // Refactor: Use systemInstruction config property instead of combining with contents.
         const result = await ai.models.generateContent({
             model: model, 
-            contents: combinedPrompt,
-            config: { responseMimeType: 'application/json', responseSchema }
+            contents: contents,
+            config: {
+                systemInstruction: systemInstruction,
+                responseMimeType: 'application/json',
+                responseSchema
+            }
         });
 
         const jsonString = result.text;
