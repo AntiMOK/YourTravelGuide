@@ -11,66 +11,6 @@
 <link rel="stylesheet" href="/index.css">
 </head>
 <body>
-    <!--
-================================================================================
-=== GITHUB PAGES DEPLOYMENT GUIDE ==============================================
-================================================================================
-
-This application is ready for deployment to GitHub Pages. Follow these steps:
-
-1. SETUP YOUR GITHUB REPOSITORY
-   - Create a new repository on GitHub.
-   - Push the application files (`index.html`, `index.css`, `index.js`, etc.) to the `main` branch of your repository.
-
-2. CONFIGURE API KEY SECRET
-   - This app requires a Google API key for the Gemini and Geocoding services.
-   - In your GitHub repository, go to "Settings" > "Secrets and variables" > "Actions".
-   - Click "New repository secret".
-   - Name the secret `GEMINI_API_KEY`.
-   - Paste your actual Google API key into the "Value" field and save it.
-
-3. CREATE A GITHUB ACTIONS WORKFLOW
-   - In your repository, create a folder named `.github` and inside it, another folder named `workflows`.
-   - Inside `.github/workflows`, create a new file named `deploy.yml`.
-   - Paste the following content into `deploy.yml`:
-
-   ```yaml
-   name: Deploy to GitHub Pages
-
-   on:
-     push:
-       branches:
-         - main  # Trigger the workflow on pushes to the main branch
-
-   jobs:
-     build-and-deploy:
-       runs-on: ubuntu-latest
-       steps:
-         - name: Checkout 🛎️
-           uses: actions/checkout@v3
-
-         - name: Replace API Key 🔑
-           run: |
-             # This command finds and replaces the string 'process.env.API_KEY'
-             # in index.js with the secret API key, making it available to the browser.
-             sed -i "s|process.env.API_KEY|'${{ secrets.GEMINI_API_KEY }}'|g" index.js
-
-         - name: Deploy 🚀
-           uses: peaceiris/actions-gh-pages@v3
-           with:
-             github_token: ${{ secrets.GITHUB_TOKEN }}
-             publish_dir: ./
-   ```
-
-4. ENABLE GITHUB PAGES
-   - Once the workflow runs for the first time (after your first push with the .yml file), a new branch named `gh-pages` will be created.
-   - In your GitHub repository, go to "Settings" > "Pages".
-   - Under "Build and deployment", set the "Source" to "Deploy from a branch".
-   - Select the `gh-pages` branch as the source and `/ (root)` as the folder.
-   - Save your changes. Your site should be live within a few minutes at `https://<your-username>.github.io/<your-repo-name>/`.
-
-================================================================================
--->
     <header>
         <div class="header-container">
             <a href="#" class="site-title-link" data-view="home">
