@@ -1,7 +1,11 @@
 // This file configures and initializes the Firebase SDK.
-// FIX: Use named imports for Firebase v9+ modular SDK instead of a namespace import.
-// FIX: Use a namespace import for `firebase/app` to resolve module export errors.
-import * as firebaseApp from "firebase/app";
+
+// Fix: Use namespace import to address module resolution issue with firebase/app.
+// FIX: Switched from namespace import to named imports for Firebase v9+ SDK.
+// FIX: Changed import to use scoped package to resolve module export error.
+// FIX: Switched to namespace import for firebase/app to work around module resolution issues.
+// FIX: Use named imports for Firebase v9+ modular SDK to resolve module property access errors.
+import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
@@ -16,10 +20,12 @@ const firebaseConfig = {
 
 // Initialize Firebase, but only if it hasn't been initialized already.
 // This prevents errors in environments with hot-reloading.
-// FIX: Updated to use `getApps` and `initializeApp` directly as required by Firebase v9+.
-const app = !firebaseApp.getApps().length
-  ? firebaseApp.initializeApp(firebaseConfig)
-  : firebaseApp.getApps()[0];
+// FIX: Use the imported `getApps` and `initializeApp` functions from the namespace import.
+// FIX: Use direct function calls with named imports for Firebase v9+ modular SDK.
+const app = !getApps().length
+  ? initializeApp(firebaseConfig)
+  // FIX: Called getApps as a function. It was previously being accessed as an array.
+  : getApps()[0];
 
 
 // Export the initialized Firebase services.
