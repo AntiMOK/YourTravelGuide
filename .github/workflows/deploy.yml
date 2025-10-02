@@ -28,7 +28,7 @@ jobs:
 
       - name: Replace API Key in built files
         run: |
-          find dist -type f -name '*.js' -exec sed -i "s|process.env.API_KEY|'${{ secrets.GEMINI_API_KEY }}'|g" {} +
+          find dist -type f -name '*.js' -exec sed -i "s|process.env.API_KEY|'${{ secrets.GEMINI_KEY }}'|g" {} +
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
