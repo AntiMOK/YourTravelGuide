@@ -40,13 +40,16 @@ This application is ready for deployment to GitHub Pages. Follow these steps:
      push:
        branches:
          - main  # Trigger the workflow on pushes to the main branch
+   
+   permissions:
+     contents: write
 
    jobs:
      build-and-deploy:
        runs-on: ubuntu-latest
        steps:
          - name: Checkout 🛎️
-           uses: actions/checkout@v3
+           uses: actions/checkout@v4
 
          - name: Replace API Key 🔑
            run: |
@@ -55,7 +58,7 @@ This application is ready for deployment to GitHub Pages. Follow these steps:
              sed -i "s|process.env.API_KEY|'${{ secrets.GEMINI_API_KEY }}'|g" index.js
 
          - name: Deploy 🚀
-           uses: peaceiris/actions-gh-pages@v3
+           uses: peaceiris/actions-gh-pages@v4
            with:
              github_token: ${{ secrets.GITHUB_TOKEN }}
              publish_dir: ./
@@ -170,7 +173,7 @@ This application is ready for deployment to GitHub Pages. Follow these steps:
                         <footer>- Mark T., Frequent Traveler</footer>
                     </blockquote>
                     <blockquote class="testimonial">
-                        <p>"Finally, an app that gets my specific cravings! I searched for 'spicy ramen' and it gave me three incredible, authentic options I didn't even know existed."</p>
+                        <p>"Finally, an an app that gets my specific cravings! I searched for 'spicy ramen' and it gave me three incredible, authentic options I didn't even know existed."</p>
                         <footer>- Laura P., Food Blogger</footer>
                     </blockquote>
                 </div>
@@ -353,6 +356,7 @@ This application is ready for deployment to GitHub Pages. Follow these steps:
     "firebase/app": "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js",
     "firebase/auth": "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js",
     "firebase/firestore": "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js",
+    "firebase/": "https://aistudiocdn.com/firebase@^12.3.0/"
   }
 }
 </script>
