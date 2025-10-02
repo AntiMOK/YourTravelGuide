@@ -1,0 +1,8 @@
+{
+  "name": "Your Local Guide",
+  "description": "Your AI-powered guide to the best local experiences, starting with restaurants.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "prompt": ""
+}

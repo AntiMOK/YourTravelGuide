@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Local Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+    <!--
+================================================================================
+=== GITHUB PAGES DEPLOYMENT GUIDE ==============================================
+================================================================================
+
+This application is ready for deployment to GitHub Pages. Follow these steps:
+
+1. SETUP YOUR GITHUB REPOSITORY
+   - Create a new repository on GitHub.
+   - Push the application files (`index.html`, `index.css`, `index.js`, etc.) to the `main` branch of your repository.
+
+2. CONFIGURE API KEY SECRET
+   - This app requires a Google API key for the Gemini and Geocoding services.
+   - In your GitHub repository, go to "Settings" > "Secrets and variables" > "Actions".
+   - Click "New repository secret".
+   - Name the secret `GEMINI_API_KEY`.
+   - Paste your actual Google API key into the "Value" field and save it.
+
+3. CREATE A GITHUB ACTIONS WORKFLOW
+   - In your repository, create a folder named `.github` and inside it, another folder named `workflows`.
+   - Inside `.github/workflows`, create a new file named `deploy.yml`.
+   - Paste the following content into `deploy.yml`:
+
+   ```yaml
+   name: Deploy to GitHub Pages
+
+   on:
+     push:
+       branches:
+         - main  # Trigger the workflow on pushes to the main branch
+   
+   permissions:
+     contents: write
+
+   jobs:
+     build-and-deploy:
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout 🛎️
+           uses: actions/checkout@v4
+
+         - name: Replace API Key 🔑
+           run: |
+             # This command finds and replaces the string 'process.env.API_KEY'
+             # in index.js with the secret API key, making it available to the browser.
+             sed -i "s|process.env.API_KEY|'${{ secrets.GEMINI_API_KEY }}'|g" index.js
+
+         - name: Deploy 🚀
+           uses: peaceiris/actions-gh-pages@v4
+           with:
+             github_token: ${{ secrets.GITHUB_TOKEN }}
+             publish_dir: ./
+   ```
+
+4. ENABLE GITHUB PAGES
+   - Once the workflow runs for the first time (after your first push with the .yml file), a new branch named `gh-pages` will be created.
+   - In your GitHub repository, go to "Settings" > "Pages".
+   - Under "Build and deployment", set the "Source" to "Deploy from a branch".
+   - Select the `gh-pages` branch as the source and `/ (root)` as the folder.
+   - Save your changes. Your site should be live within a few minutes at `https://<your-username>.github.io/<your-repo-name>/`.
+
+================================================================================
+-->
+    <header>
+        <div class="header-container">
+            <a href="#" class="site-title-link" data-view="home">
+                <h1 class="site-title">Your Local Guide</h1>
+            </a>
+            <div class="header-right">
+                <nav class="desktop-nav">
+                    <button data-view="home" class="nav-button active">Home</button>
+                    <button data-view="search" class="nav-button">Search</button>
+                    <button data-view="explore" class="nav-button">Explore</button>
+                    <button data-view="library" class="nav-button">My Library</button>
+                </nav>
+                <div id="auth-container" class="desktop-auth"></div>
+                <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Open menu" aria-expanded="false">
+                    <svg class="icon-menu" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                    <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobile-nav-container" class="mobile-nav-container">
+        <nav id="mobile-nav" class="mobile-nav">
+            <button data-view="home" class="nav-button active">Home</button>
+            <button data-view="search" class="nav-button">Search</button>
+            <button data-view="explore" class="nav-button">Explore</button>
+            <button data-view="library" class="nav-button">My Library</button>
+        </nav>
+        <div id="mobile-auth-container"></div>
+    </div>
+
+    <main>
+        <div id="home-view" class="view">
+            <!-- Block 1: Hero Section -->
+            <section class="hero-section">
+                <h1>Your Personalized Restaurant Guide. In Seconds.</h1>
+                <h2>Tired of endless reviews and generic top-10 lists? Tell us your taste, occasion, and budget, and our AI will instantly create a custom food guide for your next amazing meal out.</h2>
+                <button id="home-cta-button" class="button-primary cta-button">Create My Free Guide</button>
+            </section>
+            
+            <!-- Block 2: How It Works -->
+            <section class="home-section">
+                <h2 class="home-section-title">Find Your Perfect Meal in 3 Simple Steps</h2>
+                <div class="home-grid three-cols">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2m0-14C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                        </div>
+                        <h3>Step 1: Tell Us Your Vibe</h3>
+                        <p>Answer a few quick questions to personalize your search. What are you craving? Who are you with? From a romantic dinner to a quick solo lunch, we've got you covered.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M12.01 5.5c2.49 0 4.5 2.01 4.5 4.5 0 2.48-2.01 4.5-4.5 4.5s-4.5-2.02-4.5-4.5c0-2.49 2.01-4.5 4.5-4.5m0-2c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5 6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c.89 0 1.74-.12 2.56-.34.02-.01.03-.02.05-.03l-1.48-1.48c-.28-.28-.66-.44-1.06-.44H12c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5c0 .4-.16.78-.44 1.06L18 16.51c.33.33.78.49 1.22.49.18 0 .36-.03.53-.09l.04.01c.21-.07.42-.15.62-.24.11-.05.21-.1.32-.16l.11-.06c.21-.13.41-.27.6-.42.02-.01.03-.02.05-.04l1.3-1.3c.01-.01.02-.02.02-.03.5-.93.79-1.97.79-3.08C22 6.48 17.52 2 12 2z"/></svg>
+                        </div>
+                        <h3>Step 2: Get Your Instant Guide</h3>
+                        <p>Our smart algorithm analyzes thousands of local reviews, menus, and hidden gems to build a unique, map-based guide that perfectly matches your request.</p>
+                    </div>
+                     <div class="feature-item">
+                        <div class="feature-icon">
+                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </div>
+                        <h3>Step 3: Eat with Confidence</h3>
+                        <p>Stop guessing and start enjoying. Explore your curated list of top-rated restaurants and local favorites, complete with booking links and why we picked them for you.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Block 3: Key Features & Benefits -->
+            <section class="home-section alternate-bg">
+                <h2 class="home-section-title">Go Beyond the Standard Search Results</h2>
+                <div class="home-grid three-cols">
+                    <div class="feature-item">
+                        <h3>Hyper-Personalized Picks</h3>
+                        <p>Our guides are tailored to your specific mood. Whether you're looking for a "cozy spot with vegetarian options" or a "lively place with great cocktails," we find the perfect match.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>Save Hours of Research</h3>
+                        <p>No more switching between ten different browser tabs and blogs. We do all the heavy lifting, consolidating the most important information into one simple, beautiful guide.</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>Discover True Hidden Gems</h3>
+                        <p>Our algorithm is trained to find incredible local restaurants that don't always make the sponsored lists. We help you find the food the locals actually love.</p>
+                    </div>
+                </div>
+            </section>
+
+             <!-- Block 4: Social Proof (Testimonials) -->
+            <section class="home-section">
+                <h2 class="home-section-title">Don't Just Take Our Word For It</h2>
+                <div class="home-grid three-cols">
+                    <blockquote class="testimonial">
+                        <p>"This is a game-changer for date nights. We found the most amazing little Italian place in a neighborhood we'd never have thought to visit. Five stars!"</p>
+                        <footer>- Anna K., Jūrmala</footer>
+                    </blockquote>
+                    <blockquote class="testimonial">
+                        <p>"As someone who travels for work, this app saves me. I can land in a new city and have a curated list of top-tier dinner spots in minutes. It never misses."</p>
+                        <footer>- Mark T., Frequent Traveler</footer>
+                    </blockquote>
+                    <blockquote class="testimonial">
+                        <p>"Finally, an an app that gets my specific cravings! I searched for 'spicy ramen' and it gave me three incredible, authentic options I didn't even know existed."</p>
+                        <footer>- Laura P., Food Blogger</footer>
+                    </blockquote>
+                </div>
+            </section>
+            
+            <!-- Block 5: Example Guides (Visual Showcase) -->
+            <section class="home-section alternate-bg">
+                <h2 class="home-section-title">Guides for Any Occasion</h2>
+                <div class="home-grid three-cols">
+                    <div class="example-guide-card">
+                        <h4>A Romantic Evening in Jūrmala</h4>
+                        <p>Discover intimate restaurants with perfect ambiance, top-rated wine lists, and exquisite menus for a night to remember.</p>
+                    </div>
+                    <div class="example-guide-card">
+                        <h4>The Ultimate Jūrmala Brunch Tour</h4>
+                        <p>From decadent pastries to savory classics, this guide maps out the must-visit brunch spots for your weekend.</p>
+                    </div>
+                    <div class="example-guide-card">
+                        <h4>Quick & Healthy Lunch Spots Near You</h4>
+                        <p>Need a fast, delicious, and healthy lunch? This guide shows you the best local cafes and delis that won't slow you down.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Block 6: Final Call-to-Action -->
+            <section class="final-cta-section">
+                <h2>Ready to Find Your Next Favorite Meal?</h2>
+                <p>Your table is waiting. Stop scrolling and start discovering the best local food your city has to offer. Create your first personalized guide for free—it only takes a second.</p>
+                <button id="final-cta-button" class="button-primary cta-button">Get Started Now</button>
+            </section>
+        </div>
+
+        <div id="search-view" class="view" hidden>
+            <div id="search-panel">
+                <form id="search-form">
+                    <div class="search-section">
+                        <h3 class="search-section-title">Where are you going?</h3>
+                        <div class="search-main">
+                            <div class="form-group">
+                                <label for="city-input">City</label>
+                                <div class="input-with-button">
+                                    <input type="text" id="city-input" name="city" placeholder="e.g., San Francisco" required>
+                                    <button type="button" id="use-location-btn" class="button-icon" aria-label="Use my current location">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="submit" class="button-primary search-submit">Create Guide</button>
+                        </div>
+                        <p id="location-message" class="location-message"></p>
+                    </div>
+
+                    <div class="search-section">
+                        <h3 class="search-section-title">What are you looking for? (Optional)</h3>
+                        <div class="form-group">
+                            <label for="dish-input">Cuisine or Dish</label>
+                            <input type="text" id="dish-input" name="dish" placeholder="e.g., sushi, pasta, tacos">
+                        </div>
+                        <div class="search-filters">
+                            <div class="form-group">
+                                <label>Price</label>
+                                <div class="input-like-box">
+                                    <div class="radio-group">
+                                        <label><input type="radio" name="price" value="" checked>Any</label>
+                                        <label><input type="radio" name="price" value="$">$</label>
+                                        <label><input type="radio" name="price" value="$$">$$</label>
+                                        <label><input type="radio" name="price" value="$$$">$$$</label>
+                                        <label><input type="radio" name="price" value="$$$$">$$$$</label>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="form-group">
+                                <label>Audience</label>
+                                 <div class="input-like-box">
+                                    <div class="radio-group">
+                                        <label><input type="radio" name="audience" value="" checked>Any</label>
+                                        <label><input type="radio" name="audience" value="Local">Local</label>
+                                        <label><input type="radio" name="audience" value="International">International</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Dietary</label>
+                                <div class="input-like-box">
+                                    <div class="checkbox-group">
+                                        <label><input type="checkbox" name="diet" value="Vegetarian">Vegetarian</label>
+                                        <label><input type="checkbox" name="diet" value="Vegan">Vegan</label>
+                                        <label><input type="checkbox" name="diet" value="Gluten-Free">Gluten-Free</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="search-section">
+                         <h3 class="search-section-title">What's the vibe?</h3>
+                         <div class="input-like-box">
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="vibe" value="Casual">Casual</label>
+                                <label><input type="checkbox" name="vibe" value="Upscale">Upscale</label>
+                                <label><input type="checkbox" name="vibe" value="Quiet">Quiet</label>
+                                <label><input type="checkbox" name="vibe" value="Lively">Lively</label>
+                                <label><input type="checkbox" name="vibe" value="Child-Friendly">Child-Friendly</label>
+                                <label><input type="checkbox" name="vibe" value="Cozy">Cozy</label>
+                                 <label><input type="checkbox" name="vibe" value="Hidden Gem">Hidden Gem</label>
+                                <label><input type="checkbox" name="vibe" value="Outdoor Seating">Outdoor Seating</label>
+                                <label><input type="checkbox" name="vibe" value="Scenic View">Scenic View</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="search-submit-container">
+                        <button type="submit" class="button-primary">Create Guide</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="results-container" hidden>
+                <div class="results-header">
+                    <h2 id="guide-title">Your Custom Guide</h2>
+                    <div class="results-header-actions">
+                         <button id="like-button" class="button-secondary" aria-label="Like Guide" disabled>
+                            <svg class="like-icon-outline" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></svg>
+                            <svg class="like-icon-filled" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            <span id="like-count">0</span>
+                        </button>
+                         <button id="share-button" class="button-secondary" aria-label="Share Guide" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/></svg>
+                            <span>Share</span>
+                        </button>
+                        <button id="new-guide-button" class="button-primary">Create New Guide</button>
+                    </div>
+                </div>
+                 <p id="guide-description" class="guide-description"></p>
+                 <div id="guide-content">
+                 </div>
+                 <div class="find-more-container">
+                    <button id="find-more-button" class="button-secondary" hidden>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        <span>Find More</span>
+                    </button>
+                 </div>
+
+                 <div id="comments-section" class="comments-section" hidden>
+                    <h3>Comments</h3>
+                    <div id="comments-list">
+                    </div>
+                    <form id="comment-form">
+                        <div class="comment-input-container">
+                            <img id="comment-user-avatar" src="" alt="Your avatar" class="user-avatar">
+                            <textarea id="comment-input" name="comment" placeholder="Add a comment..." required></textarea>
+                        </div>
+                        <div class="comment-form-actions">
+                            <p id="comment-login-prompt" hidden>Please log in to post a comment.</p>
+                            <button type="submit" id="comment-submit-btn" class="button-primary">Post Comment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="explore-view" class="view" hidden>
+            <h2>Explore All Guides</h2>
+            <p>Discover guides created by users from around the world.</p>
+            <div id="explore-content">
+            </div>
+        </div>
+
+        <div id="library-view" class="view" hidden>
+            <h2>My Saved Guides</h2>
+            <div id="library-content">
+            </div>
+        </div>
+    </main>
+
+    <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.20.0",
+    "firebase/app": "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js",
+    "firebase/auth": "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js",
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js",
+    "firebase/": "https://aistudiocdn.com/firebase@^12.3.0/"
+  }
+}
+</script>
+    <script type="module" src="./index.js"></script>
+</body>
+</html>
