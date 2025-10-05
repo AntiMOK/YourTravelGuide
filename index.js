@@ -31,7 +31,7 @@ let isCurrentGuideLiked = false;
 
 
 // --- GEMINI API SETUP ---
-const ai = new GoogleGenAI({ apiKey: '' });
+const ai = new GoogleGenAI({ apiKey: 'AIzaSyCACFoIGzPReBJ2C3p4-Nr6t_XRUUdGeAE' });
 const model = "gemini-2.5-flash";
 
 // --- SYSTEM INSTRUCTIONS ---
@@ -894,7 +894,7 @@ function handleUseLocationClick() {
             // Replaced Nominatim with Google's Geocoding API for a more robust, production-grade integration
             // that aligns with the app's existing Google-based technology stack.
             // NOTE: This requires the "Geocoding API" to be enabled in your Google Cloud project for the same API key.
-            const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${''}`);
+            const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${'AIzaSyCACFoIGzPReBJ2C3p4-Nr6t_XRUUdGeAE'}`);
             const data = await response.json();
 
             if (data.status === 'OK' && data.results && data.results.length > 0) {
